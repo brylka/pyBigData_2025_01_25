@@ -1,5 +1,7 @@
+from statistics import mean
 import requests
 from typing import List, Dict
+from time import sleep
 
 class Task:
     def __init__(self, station_id: str):
@@ -10,6 +12,7 @@ class Task:
 class WeatherOrchestartor:
     def __init__(self):
         self.tasks: List[Task] = []
+        self.results: Dict[str, float] = {}
         self.api_url = "http://127.0.0.1:8000/weather/{station_id}"
         #self.url = "http://127.0.0.1:8000/weather/" # tu jeszcze station_id
 
@@ -23,16 +26,26 @@ class WeatherOrchestartor:
 
         for task in self.tasks:
             print(f"[ZADANIE] Pobieranie danych ze stacji {task.station_id}...")
+            task.status = "progres"
             response = requests.get(self.api_url.format(station_id=task.station_id))
             #response = requests.get(self.url + str(task.station_id))
             data = response.json()
 
             task.result = data
 
+            self.results[task.station_id] = data['temperature']
+
             print(f"[WYNIK] Stacja {task.station_id}")
             print(f"Temperatura: {data['temperature']:.2f}'C")
             print(f"Wilgotność:  {data['humidity']:.2f}%")
             print(f"Czas:        {data['timestamp']}")
+
+            task.status = "completed"
+            sleep(1)
+
+    def show_avarage_temperature(self):
+        avg = mean(self.results.values())
+        print(f"[ANALIZA] Średnia temperatura ze wszystkich stacji: {avg:.2f}'C")
 
 
 if __name__ == "__main__":
@@ -44,5 +57,6 @@ if __name__ == "__main__":
         orchestrator.add_task(station)
 
     orchestrator.process_tasks()
+    orchestrator.show_avarage_temperature()
 
     print("[KONIEC] Zakończono przetwarzanie")
