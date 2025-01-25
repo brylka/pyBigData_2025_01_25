@@ -23,7 +23,7 @@ class WeatherOrchestartor:
 
     def process_tasks(self):
         print("[PROCESOR] Rozpoczynam przetwarzanie zadań...")
-        print(self.tasks)
+        #print(self.tasks)
         for task in self.tasks:
             if task.status == "pending":
                 print(f"[ZADANIE] Pobieranie danych ze stacji {task.station_id}...")
