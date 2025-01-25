@@ -1,7 +1,7 @@
 from datetime import datetime
 from fastapi.responses import HTMLResponse
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 import uvicorn
 
 app = FastAPI()
@@ -18,6 +18,18 @@ def get_weather_simple():
         "timestamp": datetime.now()
     }
 
+@app.get("/xml")
+def get_xml():
+    title = "Witaj w moim api"
+    xml_data = f"""<?xml version="1.0"?>
+    <message>
+        <title>{title}</title>
+        <h1>Witaj Merito!</h1>
+        <p>BigData</p>
+    </message>
+    """
+    return Response(content=xml_data, media_type="application/xml")
+
 @app.get("/json")
 def get_json():
     return {
@@ -28,14 +40,14 @@ def get_json():
 
 @app.get("/html", response_class=HTMLResponse)
 def get_html():
-    return """
+    return """<!DOCTYPE html>
 <html>
     <head>
         <title>Witaj w moim api</title>
     </head>
     <body>
         <h1>Witaj Merito!</h1>
-        <p>BigData</p>
+        <p>BigData
     </body>
 </html>
     """
