@@ -18,7 +18,7 @@ class WeatherDataConsumer:
     def start_consuming(self):
         with open('weather_data.csv', 'a') as f:
             if f.tell() == 0:
-                f.write("timestamp,station_id,temperatute\n")
+                f.write("timestamp,station_id,temperature\n")
             while True:
                 msg = self.consumer.poll(1.0)
 
