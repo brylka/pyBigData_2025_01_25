@@ -32,13 +32,15 @@ class WeatherStationMonitor:
                     'timestamp': timestamp,
                     'action': 'fetch_weather'
                 }
-                self.producer.produce(
-                    self.topic,
-                    json.dumps(message).encode("utf-8"),
-                    callback=self.delivery_report
-                )
-                print(f"Wysłano zadanie dla stacji: {station_id}")
-
+                try:
+                    self.producer.produce(
+                        self.topic,
+                        json.dumps(message).encode("utf-8"),
+                        callback=self.delivery_report
+                    )
+                    print(f"Wysłano zadanie dla stacji: {station_id}")
+                except Exception as e:
+                    print(f"Problem z wysłaniem zadania: {e}")
             self.producer.flush()
             time.sleep(30)
 

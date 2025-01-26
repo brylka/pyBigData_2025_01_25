@@ -16,32 +16,37 @@ class WeatherDataConsumer:
         print(f"Konsument zainicjowany")
 
     def start_consuming(self):
-        with open('weather_data.csv', 'a') as f:
-            if f.tell() == 0:
-                f.write("timestamp,station_id,temperature\n")
-            while True:
-                msg = self.consumer.poll(1.0)
+        try:
+            with open('weather_data.csv', 'a') as f:
+                if f.tell() == 0:
+                    f.write("timestamp,station_id,temperature\n")
+                while True:
+                    msg = self.consumer.poll(1.0)
 
-                if msg is None:
-                    continue
-                if msg.error():
-                    if msg.error().code() == KafkaError._PARTITION_EOF:
+                    if msg is None:
                         continue
-                    else:
-                        print(f"Błąd: {msg.error()}")
-                        break
+                    if msg.error():
+                        if msg.error().code() == KafkaError._PARTITION_EOF:
+                            continue
+                        else:
+                            print(f"Błąd: {msg.error()}")
+                            break
+                    try:
+                        data = json.loads(msg.value().decode("utf-8"))
+                        station_id = data['station_id']
+                        print(f"Otrzymano zadanie dla stacji: {station_id}")
 
-                data = json.loads(msg.value().decode("utf-8"))
-                station_id = data['station_id']
-                print(f"Otrzymano zadanie dla stacji: {station_id}")
-
-                weather_data = fetch_weather_data(station_id, False)
-                if weather_data:
-                    temperature = weather_data['temperature']
-                    timestamp = weather_data['timestamp']
-                    print(f"Stacja {station_id} temperatura: {temperature:.2f}'C timestamp: {timestamp}")
-                    f.write(f"{timestamp},{station_id},{temperature}\n")
-                    f.flush()
+                        weather_data = fetch_weather_data(station_id, False)
+                        if weather_data:
+                            temperature = weather_data['temperature']
+                            timestamp = weather_data['timestamp']
+                            print(f"Stacja {station_id} temperatura: {temperature:.2f}'C timestamp: {timestamp}")
+                            f.write(f"{timestamp},{station_id},{temperature}\n")
+                            f.flush()
+                    except Exception as e:
+                        print(f"Błąd przetwarzania wiadomości: {e}")
+        except Exception as e:
+            print(f"Błąd konsumpcji: {e}")
 
 if __name__ == "__main__":
     consumer = WeatherDataConsumer()
