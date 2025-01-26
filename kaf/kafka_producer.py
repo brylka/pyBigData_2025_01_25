@@ -46,6 +46,6 @@ class WeatherStationMonitor:
 if __name__ == "__main__":
     monitor = WeatherStationMonitor()
 
-    for i in range(1,3):
+    for i in range(1,4):
         monitor.add_station(f"STACJA{i:03d}")
     monitor.start_monitoring()
