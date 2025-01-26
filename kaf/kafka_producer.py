@@ -17,6 +17,5 @@ class WeatherStationMonitor:
 if __name__ == "__main__":
     monitor = WeatherStationMonitor()
 
-    monitor.add_station("STACJA001")
-    monitor.add_station("STACJA002")
-    monitor.add_station("STACJA003")
+    for i in range(1,11):
+        monitor.add_station(f"STACJA{i}")
