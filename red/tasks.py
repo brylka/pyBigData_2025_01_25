@@ -23,4 +23,5 @@ def fetch_weather_data(station_id: str):
         return None
 
 
-print(fetch_weather_data("STACJA001"))
+if __name__ == "__main__":
+    print(fetch_weather_data("STACJA001"))
