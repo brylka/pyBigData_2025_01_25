@@ -9,7 +9,9 @@ def fetch_weather_data(station_id: str):
 
         if response.status_code == 200:
             data = response.json()
-
+            temp = data["temperature"]
+            if temp > 30:
+                print(f"Wysoka temperatura {temp}'C na stacji {station_id}")
             return data
         else:
             print(f"Błąd: {response.status_code}")
