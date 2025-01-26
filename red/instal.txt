@@ -1,0 +1,49 @@
+pip install rq redis requests
+
+Instalacja Redisa w Windowsie:
+wsl --install
+
+sudo apt-get update
+sudo apt-get install redis-server
+sudo service redis-server start
+sudo service redis-server status
+sudo service redis-server stop
+
+# ewentualnie
+sudo systemctl start/status/stop redis-server
+
+redis-cli
+
+# Test połączenia
+ping                    # Powinno zwrócić PONG
+
+# Sprawdzenie informacji o serwerze
+info                    # Pokaże szczegółowe informacje o serwerze Redis
+
+# Test zapisu i odczytu
+set test "Hello Redis"  # Zapisze wartość
+get test               # Odczyta wartość
+
+# Sprawdzenie statystyk pamięci
+info memory
+
+# Sprawdzenie liczby kluczy w bazie
+dbsize
+
+# Sprawdzenie listy wszystkich kluczy
+keys *
+
+# Usunięcie wszystkich kluczy
+flushall
+
+# Wyjście z CLI
+exit
+
+
+Port:
+sudo netstat -tlnp | grep redis
+
+cat /etc/redis/redis.conf
+
+sudo tail -f /var/log/redis/redis-server.log
+

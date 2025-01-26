@@ -1,0 +1,37 @@
+Pobierz i zainstaluj Docker desktop for Windows
+
+# Pobierz i uruchom Zookeepera
+docker pull wurstmeister/zookeeper
+docker run -d --name zookeeper -p 2181:2181 wurstmeister/zookeeper
+
+# Pobierz i uruchom Kafkę
+docker pull wurstmeister/kafka
+docker run -d --name kafka -p 9092:9092 -e KAFKA_ADVERTISED_HOST_NAME=localhost -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 --link zookeeper:zookeeper wurstmeister/kafka
+
+# Utwórz temat
+docker exec kafka kafka-topics.sh --create --topic weather_data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+# Zatrzymanie
+docker stop kafka zookeeper
+
+# Usunięcie kontenerów
+docker rm kafka zookeeper
+
+
+
+# Zalogowanie do dockera
+docker exec -it kafka bash
+
+
+# Przykładowe polecenia:
+# Lista tematów
+kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# Szczegóły tematu
+kafka-topics.sh --describe --topic weather_data --bootstrap-server localhost:9092
+
+# Czytanie wiadomości
+kafka-console-consumer.sh --topic weather_data --from-beginning --bootstrap-server localhost:9092
+
+# Liczba wiadomości/offsety
+kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic weather_data
