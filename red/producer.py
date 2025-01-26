@@ -8,7 +8,7 @@ class WeatherStationMonitor:
     def __init__(self):
         print(f"Start monitora")
         self.redis_conn = Redis()
-        self.queue = Queue('weather_ststion', connection=self.redis_conn)
+        self.queue = Queue('weather_station', connection=self.redis_conn)
         self.monitored_stations = set()
 
     def add_station(self, station_id):
